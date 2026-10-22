@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AISCN v2 – Science Career Navigator</title>
+<style>
+:root{--bg:#F3F7F8;--card:#fff;--ink:#12262B;--mute:#5A6E74;--pri:#0F5C6E;--pri2:#D8EEF2;--acc:#E39A1F;--ok:#1F8A5B;--line:#D5E1E4;--warn:#FFF4DC;--warnt:#6B4A00;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1A1D;--card:#162428;--ink:#E7F1F3;--mute:#9DB3B9;--pri:#5FC1D6;--pri2:#1B3A42;--acc:#F0B24A;--ok:#4FCB93;--line:#28393E;--warn:#3A2F12;--warnt:#F3D58A}}
+:root[data-theme="dark"]{--bg:#0E1A1D;--card:#162428;--ink:#E7F1F3;--mute:#9DB3B9;--pri:#5FC1D6;--pri2:#1B3A42;--acc:#F0B24A;--ok:#4FCB93;--line:#28393E;--warn:#3A2F12;--warnt:#F3D58A}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",Roboto,system-ui,sans-serif;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+header{background:var(--pri);color:#fff;padding:16px 16px 14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) header{background:#12363F}}
+header h1{margin:0;font-size:22px;letter-spacing:.3px}header p{margin:2px 0 0;font-size:13px;opacity:.9}
+.proto{background:var(--warn);color:var(--warnt);font-size:13px;padding:8px 16px}
+main{max-width:640px;margin:0 auto;padding:14px 14px 20px}
+h2{font-size:20px;margin:6px 0 4px}h3{font-size:16px;margin:0 0 4px}
+.sub{color:var(--mute);font-size:14px;margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+input[type=text],select{width:100%;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:12px}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1.5px solid var(--pri);background:var(--pri);color:#fff;padding:10px 14px;min-height:44px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button{color:#0E1A1D}}
+button.ghost{background:transparent;color:var(--pri)}
+button.sm{padding:6px 12px;min-height:36px;font-size:14px}
+.chip{background:var(--pri2);color:var(--pri);border:none;border-radius:20px;padding:6px 12px;min-height:36px;font-size:14px}
+.tag{display:inline-block;background:var(--pri2);color:var(--pri);border-radius:6px;padding:2px 8px;font-size:12.5px;margin:2px 4px 2px 0}
+.tag.s{background:var(--warn);color:var(--warnt);font-weight:600}
+ul{margin:4px 0 8px;padding-left:20px}li{margin:3px 0}
+label.ck{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
+label.ck:last-child{border-bottom:0}
+input[type=checkbox]{width:22px;height:22px;flex:none;accent-color:var(--pri);margin-top:1px}
+.done span{text-decoration:line-through;color:var(--mute)}
+.bar{height:10px;background:var(--pri2);border-radius:6px;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;background:var(--ok);border-radius:6px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.stat b{font-size:26px;display:block;color:var(--pri)}.stat small{color:var(--mute)}
+.two{display:grid;grid-template-columns:1fr;gap:10px}
+.cv{border-left:4px solid var(--pri);padding-left:10px}.cv.b{border-color:var(--acc)}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav button{flex:1;background:none;border:0;color:var(--mute);font-size:11.5px;padding:8px 2px;border-radius:0;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:58px}
+nav button .ic{font-size:20px}nav button.on{color:var(--pri);font-weight:700;box-shadow:inset 0 3px 0 var(--acc)}
+.note{font-size:13px;color:var(--mute)}
+.empty{text-align:center;color:var(--mute);padding:18px 8px}
+.wk{font-weight:700;color:var(--pri);margin:10px 0 2px}
+</style>
+</head>
+<body>
+<header><h1>AISCN</h1><p>AI-Powered Science Career Navigator · Version 2 prototype</p></header>
+<div class="proto">Prototype. Sample data only. No accounts, no cloud saving, no live job checks. Progress is saved on this device’s browser only.</div>
+<main id="app"></main>
+<nav id="nav"></nav>
+<script>
+var D=[
+{k:"pharmacol",n:"Pharmacology",c:[
+{id:"p1",n:"Clinical Research Associate",r:"Helps run clinical trials: checks sites follow the protocol, data are accurate and patients are protected.",j:["Clinical trial assistant","Clinical research coordinator","Junior CRA"],s:["Good Clinical Practice (GCP)","Attention to detail","Clinical trial phases","Clear written communication"],l:["OpenWHO free courses","NIHR Learn GCP (free, check eligibility)","OpenLearn clinical research basics"],pr:"Summarise a public clinical trial record and explain its design in one page."},
+{id:"p2",n:"Drug Safety (Pharmacovigilance)",r:"Collects and reviews reports of side effects to keep medicines safe after and before approval.",j:["Drug safety associate","Case processing assistant","PV data entry specialist"],s:["Adverse event reporting","MedDRA coding basics","Medical terminology","Data accuracy"],l:["WHO Uppsala Monitoring Centre e-learning","OpenWHO","Khan Academy health topics"],pr:"Write a mock case report for a known drug side effect using public label information."},
+{id:"p3",n:"Medical or Regulatory Writer",r:"Writes clear scientific documents such as trial reports, patient leaflets and regulatory submissions.",j:["Junior medical writer","Regulatory affairs assistant","Scientific content editor"],s:["Scientific writing","Reading research papers","Referencing","Regulatory basics"],l:["OpenLearn writing skills","Coursera/edX audit options (check)","NCBI Bookshelf guidelines"],pr:"Rewrite a research abstract as a plain-language patient summary."}]},
+{k:"biochem",n:"Biochemistry",c:[
+{id:"b1",n:"Research Technician / Lab Scientist",r:"Runs experiments, prepares samples and keeps labs running in universities, institutes or companies.",j:["Research assistant","Lab technician","Assay technician"],s:["Pipetting and assay accuracy","Lab notebook records","Basic statistics","Lab safety"],l:["Khan Academy biology","JoVE free previews (check)","OpenLearn science"],pr:"Plan a mock experiment with controls, a results table and a short methods write-up."},
+{id:"b2",n:"Clinical Biochemist (Lab Medicine)",r:"Analyses blood and body-fluid tests that help doctors diagnose and monitor disease.",j:["Biomedical support worker","Clinical lab assistant","Trainee clinical scientist (route varies by country)"],s:["Analytical methods","Quality control","Human physiology","Lab information systems"],l:["Khan Academy health and medicine","OpenLearn health","Your national lab-science body’s free resources"],pr:"Make a one-page guide explaining three common blood tests and what they measure."},
+{id:"b3",n:"Bioinformatics Analyst",r:"Uses code and databases to make sense of biological data such as genes and proteins.",j:["Junior bioinformatician","Data technician","Research data assistant"],s:["Python or R basics","Biological databases","Spreadsheets and data cleaning","Version control"],l:["Galaxy Training Network","EMBL-EBI Train online","Software Carpentry lessons"],pr:"Analyse a public gene-expression dataset and share a short, clear report."}]},
+{k:"microb",n:"Microbiology",c:[
+{id:"m1",n:"Diagnostic Microbiologist",r:"Identifies infections in lab samples and tests which treatments will work.",j:["Microbiology lab assistant","Biomedical support worker","Clinical lab trainee"],s:["Aseptic technique","Culture and staining","Antimicrobial resistance basics","Safe sample handling"],l:["OpenWHO infection courses","Khan Academy microbiology","OpenLearn microbiology"],pr:"Create an infographic on how antibiotic resistance develops."},
+{id:"m2",n:"Quality Control Microbiologist",r:"Tests pharma, food or water products to make sure they are free from harmful microbes.",j:["QC analyst","Environmental monitoring technician","Lab technician"],s:["GMP and GLP basics","Sterility testing","Documentation","Data trending"],l:["OpenLearn quality topics","WHO GMP training materials (public)","Khan Academy"],pr:"Draft a mock testing SOP (standard operating procedure) for water sampling."},
+{id:"m3",n:"Public Health and Infection Surveillance",r:"Tracks outbreaks and helps health bodies respond to infectious disease.",j:["Surveillance assistant","Public health intern","Health data officer"],s:["Epidemiology basics","Data visualisation","Report writing","Communication"],l:["OpenWHO","CDC TRAIN (free, check)","Khan Academy statistics"],pr:"Chart a public disease-case dataset and write a three-sentence interpretation."}]},
+{k:"pharmacy",n:"Pharmacy",c:[
+{id:"y1",n:"Regulatory Affairs Officer",r:"Prepares and tracks the paperwork that gets medicines approved and kept on the market.",j:["Regulatory affairs assistant","Submissions coordinator","Labelling associate"],s:["Regulatory guidelines","Document control","Attention to detail","Project coordination"],l:["OpenLearn","Public regulator guidance pages","EMA/FDA public learning materials"],pr:"Compare the labels of two versions of the same medicine and list differences."},
+{id:"y2",n:"Clinical or Community Pharmacist Path",r:"Supports safe medicine use. Licensing and registration rules differ by country, so check yours.",j:["Pharmacy technician (where available)","Pre-registration trainee","Hospital pharmacy assistant"],s:["Pharmacotherapy","Patient communication","Dispensing accuracy","Professional ethics"],l:["Your national pharmacy council resources","OpenLearn health","Khan Academy health"],pr:"Prepare a short counselling script for a common medicine in plain language."},
+{id:"y3",n:"Medical Information / Industry Roles",r:"Answers healthcare professionals’ questions about products or supports product launches.",j:["Medical information associate","Sales support associate","Product specialist trainee"],s:["Literature searching","Clear communication","Product knowledge","CRM or spreadsheet basics"],l:["NCBI Bookshelf","OpenLearn business","Khan Academy"],pr:"Write a two-page evidence summary on one drug class for a non-expert."}]},
+{k:"biotech",n:"Biotechnology",c:[
+{id:"t1",n:"Bioprocess / Manufacturing Associate",r:"Helps grow cells or microbes at scale to produce medicines, enzymes or foods.",j:["Production operator","Bioprocess technician","QC sampler"],s:["Cell culture basics","GMP awareness","Process documentation","Equipment handling"],l:["OpenLearn biotechnology","Khan Academy","Public GMP guidance"],pr:"Draw a flow diagram of a simple fermentation process with its key controls."},
+{id:"t2",n:"Biotech R&D Scientist",r:"Develops new products such as vaccines, diagnostics or engineered organisms.",j:["Research associate","Lab technician","Molecular biology technician"],s:["PCR and cloning basics","Experimental design","Data analysis","Literature review"],l:["Khan Academy molecular biology","Galaxy Training","OpenLearn"],pr:"Design a mock PCR experiment with controls and an expected results table."},
+{id:"t3",n:"Biotech Business Development",r:"Connects science with partners, markets and funding to bring products to people.",j:["Business development assistant","Market research analyst","Innovation office intern"],s:["Market research","Presenting science simply","Spreadsheets","Networking"],l:["OpenLearn entrepreneurship","Khan Academy economics","Free pitch-deck guides (check)"],pr:"Write a one-page market brief on a biotech product area you like."}]}];
+var CVK=["Tailor a one- to two-page CV to each job ad","Put a short profile summary at the top","List skills near the top, matched to the ad","Describe projects with results, not just duties","Add a clear lab/techniques or tools section","Move publications and posters lower down","Check spelling and keep one consistent format"];
+var OPP=[["Internship","Summer laboratory placement","Short hands-on placement in a university or company lab."],["Entry-level job","Graduate laboratory technician","Routine testing and sample preparation."],["Research","Research assistant post","Support a research group with experiments and data."],["Fellowship","Early-career science fellowship","Funded training or mentoring for recent graduates."],["Training","Short training programme in data skills","Free or low-cost course in R, Python or statistics."]];
+var SRC=["jobs.ac.uk (academic and research jobs)","EURAXESS (research jobs and funding in Europe)","Nature Careers (science jobs)","Your university careers service and alumni network","Company careers pages and professional bodies in your country"];
+var S={tab:"explore",deg:"",tgt:"",have:{},saved:[],done:{},cv:{},proj:[],pd:{},explored:false};
+try{var x=localStorage.getItem("aiscn_v2");if(x)Object.assign(S,JSON.parse(x))}catch(e){}
+var open="",cvv="a",flt="All",msg="";
+function save(){try{localStorage.setItem("aiscn_v2",JSON.stringify(S))}catch(e){}}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function allC(){var a=[];D.forEach(function(d){d.c.forEach(function(c){c.d=d.n;a.push(c)})});return a}
+function cby(id){return allC().filter(function(c){return c.id==id})[0]}
+function match(t){t=t.toLowerCase();if(!t.trim())return null;for(var i=0;i<D.length;i++){if(t.indexOf(D[i].k)>-1)return D[i]}if(/pharm/.test(t)&&/d\b|doctor|b\.?pharm/.test(t))return D[3];return null}
+function tags(a,c){return a.map(function(x){return '<span class="tag '+(c||"")+'">'+esc(x)+'</span>'}).join("")}
+function gaps(c){return c.s.map(function(s,i){return{s:s,i:i}}).filter(function(o){return!S.have[c.id+"_"+o.i]})}
+function road(c){var g=gaps(c),w=[];var sk=function(i){var o=g.length?g[i%g.length]:{s:c.s[i%c.s.length]};return o.s};
+var r=c.l[0];
+w.push(["Week 1: Foundations",["Learn the basics of “"+sk(0)+"” using "+r,"Write five notes on what you learned","Read three real job ads for “"+c.n+"” and list repeated skills"]]);
+w.push(["Week 2: Practice",["Practise “"+sk(1)+"” for at least three short sessions","Try one free resource: "+c.l[1%c.l.length],"Explain what you learned to a friend or in a short post"]]);
+w.push(["Week 3: Show it",["Learn the basics of “"+sk(2)+"”","Start your project: "+c.pr,"Save your project notes in one folder"]]);
+w.push(["Week 4: Apply",["Finish the project and write three result bullets for your CV","Update your CV with new skills","Save three real opportunities to check and apply to"]]);
+return w}
+function tid(c,w,i){return c.id+"w"+w+"t"+i}
+function allTasks(){var a=[];Object.keys(S.done).forEach(function(k){if(S.done[k])a.push(k)});return a.length}
+function nav(){var t=[["explore","🔭","Explore"],["prepare","🧭","Prepare"],["build","🛠️","Build"],["discover","🔎","Discover"],["progress","📊","Progress"]];
+document.getElementById("nav").innerHTML=t.map(function(x){return '<button data-a="tab" data-v="'+x[0]+'" class="'+(S.tab==x[0]?"on":"")+'"><span class="ic">'+x[1]+'</span>'+x[2]+'</button>'}).join("")}
+function careerCard(c,showDeg){var sv=S.saved.indexOf(c.id)>-1,o=open==c.id;
+var h='<div class="card"><h3>'+esc(c.n)+'</h3><p class="sub" style="margin:0 0 8px">'+(showDeg?esc(c.d)+" · ":"")+'Sample career profile</p><p style="margin:0 0 8px">'+esc(c.r)+'</p>';
+if(o){h+='<b>Possible entry-level jobs</b><ul>'+c.j.map(function(x){return"<li>"+esc(x)+"</li>"}).join("")+'</ul><b>Skills employers often look for</b><div>'+tags(c.s)+'</div><p style="margin:10px 0 2px"><b>Free learning resources</b></p><ul>'+c.l.map(function(x){return"<li>"+esc(x)+"</li>"}).join("")+'</ul><p class="note">Resource names are starting points. Check that each is still free and available in your region.</p>'}
+h+='<div class="row"><button class="ghost sm" data-a="open" data-v="'+c.id+'">'+(o?"Show less":"See details")+'</button><button class="sm" data-a="savec" data-v="'+c.id+'">'+(sv?"✓ Saved":"Save path")+'</button><button class="ghost sm" data-a="target" data-v="'+c.id+'">Plan my skills</button></div></div>';return h}
+function explore(){var m=match(S.deg),h='<h2>Explore careers</h2><p class="sub">Enter your science degree to see sample career paths.</p><div class="card"><input type="text" id="q" placeholder="e.g. Biochemistry" value="'+esc(S.deg)+'" autocomplete="off"><div class="row" style="margin-top:10px"><button data-a="search">Find careers</button></div><p class="note" style="margin:10px 0 6px">Or tap a sample degree:</p><div class="row">'+D.map(function(d){return'<button class="chip" data-a="deg" data-v="'+d.n+'">'+d.n+'</button>'}).join("")+'</div></div>';
+if(m&&S.explored){h+='<h3 style="margin:14px 0 8px">Careers for '+esc(m.n)+'</h3>'+m.c.map(function(c){return careerCard(c)}).join("")}
+else if(S.explored&&S.deg.trim()){h+='<div class="card empty">No sample data for “'+esc(S.deg)+'” yet. This prototype covers five degrees. Pick one above, or check your spelling.</div>'}
+else{h+='<div class="card empty">Your career paths will appear here.</div>'}
+return h}
+function prepare(){var h='<h2>Prepare</h2><p class="sub">Pick a career, tick skills you already have, and get a four-week plan.</p>';
+var opts='<option value="">Choose a career…</option>'+allC().map(function(c){return'<option value="'+c.id+'"'+(S.tgt==c.id?" selected":"")+'>'+esc(c.d+": "+c.n)+'</option>'}).join("");
+h+='<div class="card"><select id="tsel" data-a="tsel">'+opts+'</select></div>';
+var c=cby(S.tgt);if(!c)return h+'<div class="card empty">Choose a career to see your skill gaps and roadmap.</div>';
+h+='<div class="card"><h3>Skill check</h3><p class="sub" style="margin:0 0 4px">Tick the skills you already have.</p>'+c.s.map(function(s,i){var k=c.id+"_"+i;return'<label class="ck"><input type="checkbox" data-a="have" data-v="'+k+'"'+(S.have[k]?" checked":"")+'><span>'+esc(s)+'</span></label>'}).join("")+'</div>';
+var g=gaps(c);h+='<div class="card"><h3>Your skill gaps</h3>'+(g.length?tags(g.map(function(o){return o.s}),"s"):'<p style="margin:0">No gaps marked. The plan below focuses on showing your skills.</p>')+'</div>';
+var tot=0,dn=0;road(c).forEach(function(w,wi){w[1].forEach(function(t,i){tot++;if(S.done[tid(c,wi,i)])dn++})});
+h+='<div class="card"><h3>4-week roadmap (sample)</h3><div class="bar"><i style="width:'+Math.round(dn/tot*100)+'%"></i></div><p class="note" style="margin:0">'+dn+' of '+tot+' tasks done</p>';
+road(c).forEach(function(w,wi){h+='<div class="wk">'+esc(w[0])+'</div>'+w[1].map(function(t,i){var k=tid(c,wi,i);return'<label class="ck '+(S.done[k]?"done":"")+'"><input type="checkbox" data-a="task" data-v="'+k+'"'+(S.done[k]?" checked":"")+'><span>'+esc(t)+'</span></label>'}).join("")});
+return h+'</div>'}
+function build(){var h='<h2>Build</h2><p class="sub">Get your CV and projects ready for job applications.</p><div class="card"><h3>Academic CV vs job-market CV</h3><div class="row" style="margin-bottom:10px"><button class="'+(cvv=="a"?"":"ghost")+' sm" data-a="cvv" data-v="a">Academic CV</button><button class="'+(cvv=="b"?"":"ghost")+' sm" data-a="cvv" data-v="b">Job-market CV</button></div>';
+h+=cvv=="a"?'<div class="cv"><b>Built to show research record</b><ul><li>Can be long, three or more pages</li><li>Leads with education, publications, grants and posters</li><li>Used for research posts and PhD or fellowship applications</li></ul></div>':'<div class="cv b"><b>Built to match a specific job</b><ul><li>Usually one to two pages</li><li>Leads with a profile and skills that match the job ad</li><li>Shows results from projects, placements and lab work</li><li>Uses keywords from the job description</li></ul></div>';
+h+='</div>';var n=CVK.filter(function(_,i){return S.cv[i]}).length;
+h+='<div class="card"><h3>CV checklist</h3><div class="bar"><i style="width:'+Math.round(n/CVK.length*100)+'%"></i></div><p class="note" style="margin:0">'+n+' of '+CVK.length+' done</p>'+CVK.map(function(t,i){return'<label class="ck '+(S.cv[i]?"done":"")+'"><input type="checkbox" data-a="cv" data-v="'+i+'"'+(S.cv[i]?" checked":"")+'><span>'+esc(t)+'</span></label>'}).join("")+'</div>';
+var c=cby(S.tgt)||(S.deg&&match(S.deg)?match(S.deg).c[0]:null);var cs=c?[c]:[];
+h+='<div class="card"><h3>Project planner</h3><p class="sub" style="margin:0 0 8px">Projects show employers what you can do. Add ideas to your plan.</p>';
+var ideas=(match(S.deg)?match(S.deg).c:allC().slice(0,3));
+h+=ideas.map(function(c){var a=S.proj.indexOf(c.id)>-1;return'<div style="border-bottom:1px solid var(--line);padding:8px 0"><div style="font-size:14px">'+esc(c.pr)+'</div><div class="note">For: '+esc(c.n)+'</div><button class="ghost sm" style="margin-top:6px" data-a="addp" data-v="'+c.id+'">'+(a?"✓ In my plan":"Add to plan")+'</button></div>'}).join("");
+h+='</div>';
+if(S.proj.length)h+='<div class="card"><h3>My project plan</h3>'+S.proj.map(function(id){var c=cby(id);return'<label class="ck '+(S.pd[id]?"done":"")+'"><input type="checkbox" data-a="pd" data-v="'+id+'"'+(S.pd[id]?" checked":"")+'><span>'+esc(c.pr)+'</span></label>'}).join("")+'</div>';
+return h}
+function discover(){var ty=["All"].concat(OPP.map(function(o){return o[0]}));
+var h='<h2>Discover</h2><p class="sub">Types of opportunities to look for.</p><div class="card" style="background:var(--warn);color:var(--warnt)"><b>These are examples, not real listings.</b> AISCN does not verify opportunities in this prototype. Always check the official source before applying.</div><div class="row" style="margin-bottom:10px">'+ty.map(function(t){return'<button class="'+(flt==t?"":"ghost")+' sm" data-a="flt" data-v="'+t+'">'+t+'</button>'}).join("")+'</div>';
+OPP.filter(function(o){return flt=="All"||o[0]==flt}).forEach(function(o){h+='<div class="card"><span class="tag s">SAMPLE EXAMPLE</span><span class="tag">'+o[0]+'</span><h3 style="margin-top:6px">'+o[1]+'</h3><p style="margin:0">'+o[2]+'</p></div>'});
+h+='<div class="card"><h3>Where to look for real opportunities</h3><ul>'+SRC.map(function(s){return"<li>"+s+"</li>"}).join("")+'</ul><p class="note">Check each site yourself for current, genuine listings.</p></div>';return h}
+function progress(){var tot=0,dn=0,sc=cby(S.tgt);var allt=allC();allt.forEach(function(c){road(c).forEach(function(w,wi){w[1].forEach(function(t,i){if(S.done[tid(c,wi,i)])dn++})})});
+var cn=CVK.filter(function(_,i){return S.cv[i]}).length;
+var ms=[["Explored a degree",S.explored&&!!match(S.deg)],["Saved a career path",S.saved.length>0],["Chose a career to plan",!!S.tgt],["Completed a roadmap task",dn>0],["Added a project to plan",S.proj.length>0],["Finished the CV checklist",cn==CVK.length]];
+var mc=ms.filter(function(m){return m[1]}).length;
+var h='<h2>Progress</h2><p class="sub">Your dashboard on this device.</p><div class="stats"><div class="stat"><b>'+dn+'</b><small>Tasks completed</small></div><div class="stat"><b>'+S.saved.length+'</b><small>Saved careers</small></div><div class="stat"><b>'+cn+'/'+CVK.length+'</b><small>CV checklist</small></div><div class="stat"><b>'+mc+'/'+ms.length+'</b><small>Milestones</small></div></div>';
+h+='<div class="card"><h3>Current learning goal</h3>';
+if(sc){var t=0,d=0;road(sc).forEach(function(w,wi){w[1].forEach(function(x,i){t++;if(S.done[tid(sc,wi,i)])d++})});h+='<p style="margin:0">'+esc(sc.n)+'</p><div class="bar"><i style="width:'+Math.round(d/t*100)+'%"></i></div><p class="note" style="margin:0 0 8px">'+d+' of '+t+' roadmap tasks</p><button class="ghost sm" data-a="tab" data-v="prepare">Open roadmap</button>'}else h+='<div class="empty" style="padding:8px">No goal yet. Choose a career in Prepare.</div>';
+h+='</div><div class="card"><h3>Saved career paths</h3>';
+h+=S.saved.length?S.saved.map(function(id){var c=cby(id);return'<div class="row" style="justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)"><span>'+esc(c.n)+'<br><small class="note">'+esc(c.d)+'</small></span><span class="row"><button class="ghost sm" data-a="target" data-v="'+id+'">Plan</button><button class="ghost sm" data-a="unsave" data-v="'+id+'">Remove</button></span></div>'}).join(""):'<div class="empty" style="padding:8px">Save careers from Explore.</div>';
+h+='</div><div class="card"><h3>Milestones</h3>'+ms.map(function(m){return'<div style="padding:4px 0">'+(m[1]?"✅ ":"⬜ ")+esc(m[0])+'</div>'}).join("")+'</div><button class="ghost sm" data-a="reset">Clear all my data</button><p class="note">Saved in this browser only. No account or cloud backup exists yet.</p>';return h}
+function render(){var f={explore:explore,prepare:prepare,build:build,discover:discover,progress:progress};document.getElementById("app").innerHTML=f[S.tab]();nav();save()}
+function go(t){S.tab=t;render();window.scrollTo(0,0)}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(!b||b.tagName=="INPUT"||b.tagName=="SELECT")return;var a=b.dataset.a,v=b.dataset.v;
+if(a=="tab")go(v);
+else if(a=="search"){S.deg=document.getElementById("q").value;S.explored=true;open="";render()}
+else if(a=="deg"){S.deg=v;S.explored=true;open="";render()}
+else if(a=="open"){open=open==v?"":v;render()}
+else if(a=="savec"){var i=S.saved.indexOf(v);if(i>-1)S.saved.splice(i,1);else S.saved.push(v);render()}
+else if(a=="unsave"){S.saved.splice(S.saved.indexOf(v),1);render()}
+else if(a=="target"){S.tgt=v;go("prepare")}
+else if(a=="cvv"){cvv=v;render()}
+else if(a=="flt"){flt=v;render()}
+else if(a=="addp"){var j=S.proj.indexOf(v);if(j>-1)S.proj.splice(j,1);else S.proj.push(v);render()}
+else if(a=="reset"){if(confirm("Clear all saved progress on this device?")){S={tab:"explore",deg:"",tgt:"",have:{},saved:[],done:{},cv:{},proj:[],pd:{},explored:false};render()}}});
+document.addEventListener("change",function(e){var t=e.target,a=t.dataset.a;if(!a)return;
+if(a=="tsel"){S.tgt=t.value;render()}
+else if(a=="have"){S.have[t.dataset.v]=t.checked;render()}
+else if(a=="task"){S.done[t.dataset.v]=t.checked;render()}
+else if(a=="cv"){S.cv[t.dataset.v]=t.checked;render()}
+else if(a=="pd"){S.pd[t.dataset.v]=t.checked;render()}});
+document.addEventListener("keydown",function(e){if(e.key=="Enter"&&e.target.id=="q"){S.deg=e.target.value;S.explored=true;open="";render()}});
+render();
+</script>
+</body>
+</html>
